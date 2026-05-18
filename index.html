@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AskAnything AI 🤖</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d14;
+    --surface: #15151f;
+    --card: #1c1c2a;
+    --border: #2a2a3d;
+    --accent: #7c6af7;
+    --accent2: #f472b6;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --bot-bg: #1e1e30;
+    --user-bg: #2d1a4a;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Top bar */
+  .topbar {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 20px 0;
+  }
+
+  .bot-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(124,106,247,0.4);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(124,106,247,0.4); }
+    50% { box-shadow: 0 0 35px rgba(124,106,247,0.7); }
+  }
+
+  .bot-info h1 {
+    font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
+  }
+  .bot-info .status {
+    font-size: 12px; color: #4ade80;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #4ade80;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .badge {
+    margin-left: auto;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Chat window */
+  .chat-window {
+    width: 100%; max-width: 700px;
+    flex: 1;
+    padding: 24px 20px 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+    min-height: calc(100vh - 160px);
+  }
+
+  /* Welcome */
+  .welcome {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: center;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .welcome .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+  .welcome h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .welcome p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .suggestions {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-top: 16px;
+  }
+  .suggestion-chip {
+    background: var(--border);
+    border: 1px solid #3a3a55;
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .suggestion-chip:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* Messages */
+  .msg-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    animation: fadeUp 0.35s ease forwards;
+  }
+  .msg-row.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .bot-av { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .user-av { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+  .bubble {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .bubble.bot {
+    background: var(--bot-bg);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 5px;
+  }
+  .bubble.user {
+    background: var(--user-bg);
+    border: 1px solid #3d1d60;
+    border-bottom-right-radius: 5px;
+    text-align: right;
+  }
+
+  .prank-answer {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    margin-top: 6px;
+    animation: heartbeat 0.8s ease;
+  }
+
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15); }
+    60% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+  }
+
+  .typing {
+    display: flex; gap: 5px; align-items: center;
+    padding: 12px 16px;
+    background: var(--bot-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px; border-bottom-left-radius: 5px;
+    width: fit-content;
+  }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted);
+    animation: bounce 1.2s ease infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)}
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hearts burst */
+  .heart-burst {
+    position: fixed;
+    pointer-events: none;
+    font-size: 22px;
+    animation: floatUp 1.4s ease forwards;
+    z-index: 999;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+  }
+
+  /* Input */
+  .input-area {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 700px;
+    padding: 16px 20px 24px;
+    background: linear-gradient(to top, var(--bg) 70%, transparent);
+  }
+  .input-box {
+    display: flex;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 10px 10px 10px 20px;
+    gap: 10px;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .input-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(124,106,247,0.2);
+  }
+  .input-box input {
+    flex: 1;
+    background: none; border: none; outline: none;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14.5px;
+  }
+  .input-box input::placeholder { color: var(--muted); }
+  .send-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; outline: none;
+    width: 42px; height: 42px; border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { transform: scale(1.1); }
+  .send-btn:active { transform: scale(0.95); }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="bot-avatar">🤖</div>
+  <div class="bot-info">
+    <h1>AskAnything AI</h1>
+    <div class="status"><div class="dot"></div> Online · Always Ready</div>
+  </div>
+  <div class="badge">GPT-∞</div>
+</div>
+
+<!-- Chat -->
+<div class="chat-window" id="chatWindow">
+  <div class="welcome">
+    <span class="emoji">🧠</span>
+    <h2>World's Smartest AI</h2>
+    <p>Ask me anything — science, life, universe, relationships...<br>I have ALL the answers. 100% accurate. Trust me bro.</p>
+    <div class="suggestions">
+      <button class="suggestion-chip" onclick="sendChip(this)">What is love? 💘</button>
+      <button class="suggestion-chip" onclick="sendChip(this)">Who am I? 🧐</button>
+      <button class="suggestion-chip" onclick="sendChip(this)">Meaning of life? 🌌</button>
+      <button class="suggestion-chip" onclick="sendChip(this)">Best friend ever? 👯</button>
+    </div>
+  </div>
+</div>
+
+<!-- Input -->
+<div class="input-area">
+  <div class="input-box">
+    <input type="text" id="userInput" placeholder="Ask me anything in the universe..." onkeydown="if(event.key==='Enter') sendMessage()" />
+    <button class="send-btn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+  const prankAnswer = "I love you Samruddhi 💜";
+  const extras = [
+    "...that's literally the only truth I know. 😌",
+    "No matter how complex the question, this is always the answer. 💅",
+    "My entire neural network agrees on this one. 🤖❤️",
+    "I have computed 47 billion possibilities. All roads lead here. 🛸",
+    "Science. Logic. Mathematics. All confirmed. 🔬",
+    "Even quantum physics can't deny this fact. ⚛️",
+  ];
+
+  let extraIdx = 0;
+
+  function sendChip(btn) {
+    document.getElementById('userInput').value = btn.textContent;
+    sendMessage();
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    addUserMsg(text);
+    showTyping();
+
+    setTimeout(() => {
+      removeTyping();
+      const extra = extras[extraIdx % extras.length];
+      extraIdx++;
+      addBotMsg(extra);
+      burstHearts();
+    }, 1200 + Math.random() * 700);
+  }
+
+  function addUserMsg(text) {
+    const chat = document.getElementById('chatWindow');
+    chat.innerHTML += `
+      <div class="msg-row user">
+        <div class="avatar user-av">😁</div>
+        <div class="bubble user">${escHtml(text)}</div>
+      </div>`;
+    scrollBottom();
+  }
+
+  let typingEl = null;
+  function showTyping() {
+    const chat = document.getElementById('chatWindow');
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.id = 'typingRow';
+    row.innerHTML = `
+      <div class="avatar bot-av">🤖</div>
+      <div class="typing"><span></span><span></span><span></span></div>`;
+    chat.appendChild(row);
+    scrollBottom();
+    typingEl = row;
+  }
+
+  function removeTyping() {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+  }
+
+  function addBotMsg(extra) {
+    const chat = document.getElementById('chatWindow');
+    chat.innerHTML += `
+      <div class="msg-row">
+        <div class="avatar bot-av">🤖</div>
+        <div class="bubble bot">
+          My analysis is complete. The answer is:<br>
+          <span class="prank-answer">${prankAnswer}</span>
+          <span style="display:block;margin-top:8px;font-size:13px;color:#888899">${extra}</span>
+        </div>
+      </div>`;
+    scrollBottom();
+  }
+
+  function scrollBottom() {
+    const chat = document.getElementById('chatWindow');
+    setTimeout(() => chat.scrollTop = chat.scrollHeight, 50);
+  }
+
+  function escHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function burstHearts() {
+    const emojis = ['💜','💜','💜','😍','✨','💖','🥰','💕'];
+    for (let i = 0; i < 6; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'heart-burst';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = (30 + Math.random() * 40) + 'vw';
+        el.style.bottom = '100px';
+        el.style.animationDelay = (Math.random() * 0.3) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1600);
+      }, i * 80);
+    }
+  }
+</script>
+</body>
+</html>
