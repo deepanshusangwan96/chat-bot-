@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,236 +32,191 @@
     align-items: center;
   }
 
+  /* NAME SCREEN OVERLAY */
+  #nameScreen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.5s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .name-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 90%; max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(124,106,247,0.15);
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .name-card .big-emoji { font-size: 56px; display: block; margin-bottom: 16px; }
+  .name-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .name-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+
+  .name-input-wrap {
+    display: flex;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 10px 10px 10px 18px;
+    gap: 10px; align-items: center;
+    transition: border-color 0.2s;
+    margin-bottom: 4px;
+  }
+  .name-input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 18px rgba(124,106,247,0.2);
+  }
+  .name-input-wrap input {
+    flex:1; background:none; border:none; outline:none;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+  }
+  .name-input-wrap input::placeholder { color: var(--muted); }
+  .go-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; outline: none;
+    padding: 10px 22px;
+    border-radius: 12px;
+    color: white; font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: 'Space Grotesk', sans-serif;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+  .go-btn:hover { transform: scale(1.05); }
+  .go-btn:active { transform: scale(0.97); }
+
   /* Top bar */
   .topbar {
-    width: 100%;
-    max-width: 700px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    width: 100%; max-width: 700px;
+    display: flex; align-items: center; gap: 12px;
     padding: 20px 20px 0;
   }
-
   .bot-avatar {
-    width: 42px; height: 42px;
-    border-radius: 50%;
+    width: 42px; height: 42px; border-radius: 50%;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+    font-size: 22px; flex-shrink: 0;
     box-shadow: 0 0 20px rgba(124,106,247,0.4);
     animation: pulse 2s ease-in-out infinite;
   }
-
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(124,106,247,0.4); }
+    0%,100% { box-shadow: 0 0 20px rgba(124,106,247,0.4); }
     50% { box-shadow: 0 0 35px rgba(124,106,247,0.7); }
   }
-
-  .bot-info h1 {
-    font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
-  }
-  .bot-info .status {
-    font-size: 12px; color: #4ade80;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #4ade80;
-    animation: blink 1.5s ease-in-out infinite;
-  }
+  .bot-info h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+  .bot-info .status { font-size: 12px; color: #4ade80; display: flex; align-items: center; gap: 5px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:#4ade80; animation: blink 1.5s ease-in-out infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
   .badge {
     margin-left: auto;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     color: white; font-size: 11px; font-weight: 600;
-    padding: 4px 10px; border-radius: 20px;
-    letter-spacing: 0.5px;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
   }
 
   /* Chat window */
   .chat-window {
-    width: 100%; max-width: 700px;
-    flex: 1;
+    width: 100%; max-width: 700px; flex: 1;
     padding: 24px 20px 120px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    overflow-y: auto;
-    min-height: calc(100vh - 160px);
+    display: flex; flex-direction: column; gap: 18px;
+    overflow-y: auto; min-height: calc(100vh - 160px);
   }
-
-  /* Welcome */
   .welcome {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    text-align: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; padding: 24px; text-align: center;
     animation: fadeUp 0.6s ease forwards;
   }
   .welcome .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
   .welcome h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
   .welcome p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-  .suggestions {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: center; margin-top: 16px;
-  }
+  .suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
   .suggestion-chip {
-    background: var(--border);
-    border: 1px solid #3a3a55;
-    color: var(--text);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
+    background: var(--border); border: 1px solid #3a3a55;
+    color: var(--text); padding: 8px 14px; border-radius: 20px;
+    font-size: 13px; cursor: pointer; transition: all 0.2s;
     font-family: 'Space Grotesk', sans-serif;
   }
-  .suggestion-chip:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
+  .suggestion-chip:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
 
   /* Messages */
-  .msg-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-    animation: fadeUp 0.35s ease forwards;
-  }
+  .msg-row { display: flex; gap: 10px; align-items: flex-end; animation: fadeUp 0.35s ease forwards; }
   .msg-row.user { flex-direction: row-reverse; }
-
-  .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; flex-shrink: 0;
-  }
+  .avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
   .bot-av { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
   .user-av { background: linear-gradient(135deg, #f59e0b, #ef4444); }
-
-  .bubble {
-    max-width: 75%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 14.5px;
-    line-height: 1.55;
-  }
-  .bubble.bot {
-    background: var(--bot-bg);
-    border: 1px solid var(--border);
-    border-bottom-left-radius: 5px;
-  }
-  .bubble.user {
-    background: var(--user-bg);
-    border: 1px solid #3d1d60;
-    border-bottom-right-radius: 5px;
-    text-align: right;
-  }
+  .bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 14.5px; line-height: 1.55; }
+  .bubble.bot { background: var(--bot-bg); border: 1px solid var(--border); border-bottom-left-radius: 5px; }
+  .bubble.user { background: var(--user-bg); border: 1px solid #3d1d60; border-bottom-right-radius: 5px; text-align: right; }
 
   .prank-answer {
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 22px; font-weight: 700;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
-    margin-top: 6px;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: block; margin-top: 6px;
     animation: heartbeat 0.8s ease;
   }
-
   @keyframes heartbeat {
-    0% { transform: scale(1); }
-    30% { transform: scale(1.15); }
-    60% { transform: scale(0.95); }
-    100% { transform: scale(1); }
+    0%{transform:scale(1)} 30%{transform:scale(1.15)} 60%{transform:scale(0.95)} 100%{transform:scale(1)}
   }
 
   .typing {
-    display: flex; gap: 5px; align-items: center;
-    padding: 12px 16px;
-    background: var(--bot-bg);
-    border: 1px solid var(--border);
-    border-radius: 18px; border-bottom-left-radius: 5px;
-    width: fit-content;
+    display:flex; gap:5px; align-items:center; padding:12px 16px;
+    background: var(--bot-bg); border: 1px solid var(--border);
+    border-radius:18px; border-bottom-left-radius:5px; width:fit-content;
   }
-  .typing span {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--muted);
-    animation: bounce 1.2s ease infinite;
-  }
-  .typing span:nth-child(2) { animation-delay: 0.15s; }
-  .typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes bounce {
-    0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)}
-  }
+  .typing span { width:7px; height:7px; border-radius:50%; background:var(--muted); animation: bounce 1.2s ease infinite; }
+  .typing span:nth-child(2){animation-delay:0.15s} .typing span:nth-child(3){animation-delay:0.3s}
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
-  /* Hearts burst */
-  .heart-burst {
-    position: fixed;
-    pointer-events: none;
-    font-size: 22px;
-    animation: floatUp 1.4s ease forwards;
-    z-index: 999;
-  }
-  @keyframes floatUp {
-    0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
-  }
+  .heart-burst { position:fixed; pointer-events:none; font-size:22px; animation:floatUp 1.4s ease forwards; z-index:999; }
+  @keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-120px) scale(1.5)} }
 
-  /* Input */
   .input-area {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 700px;
-    padding: 16px 20px 24px;
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:700px; padding:16px 20px 24px;
     background: linear-gradient(to top, var(--bg) 70%, transparent);
   }
   .input-box {
-    display: flex;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    padding: 10px 10px 10px 20px;
-    gap: 10px;
-    align-items: center;
-    transition: border-color 0.2s;
+    display:flex; background:var(--card); border:1px solid var(--border);
+    border-radius:28px; padding:10px 10px 10px 20px; gap:10px; align-items:center; transition:border-color 0.2s;
   }
-  .input-box:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 20px rgba(124,106,247,0.2);
-  }
-  .input-box input {
-    flex: 1;
-    background: none; border: none; outline: none;
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14.5px;
-  }
-  .input-box input::placeholder { color: var(--muted); }
+  .input-box:focus-within { border-color:var(--accent); box-shadow:0 0 20px rgba(124,106,247,0.2); }
+  .input-box input { flex:1; background:none; border:none; outline:none; color:var(--text); font-family:'Space Grotesk',sans-serif; font-size:14.5px; }
+  .input-box input::placeholder { color:var(--muted); }
   .send-btn {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none; outline: none;
-    width: 42px; height: 42px; border-radius: 50%;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    transition: transform 0.15s;
-    flex-shrink: 0;
+    border:none; outline:none; width:42px; height:42px; border-radius:50%;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:18px; transition:transform 0.15s; flex-shrink:0;
   }
-  .send-btn:hover { transform: scale(1.1); }
-  .send-btn:active { transform: scale(0.95); }
+  .send-btn:hover{transform:scale(1.1)} .send-btn:active{transform:scale(0.95)}
 </style>
 </head>
 <body>
+
+<!-- NAME SCREEN — shown every visit -->
+<div id="nameScreen">
+  <div class="name-card">
+    <span class="big-emoji">🤖</span>
+    <h2>Welcome to AskAnything AI</h2>
+    <p>World's most intelligent AI.<br>Before we begin — what's your name?</p>
+    <div class="name-input-wrap">
+      <input type="text" id="nameInput" placeholder="Enter your name..." maxlength="30" onkeydown="if(event.key==='Enter') confirmName()" autofocus />
+      <button class="go-btn" onclick="confirmName()">Let's Go →</button>
+    </div>
+  </div>
+</div>
 
 <!-- Top Bar -->
 <div class="topbar">
@@ -296,7 +252,8 @@
 </div>
 
 <script>
-  const prankAnswer = "I love you Samruddhi 💜";
+  let userName = '';
+
   const extras = [
     "...that's literally the only truth I know. 😌",
     "No matter how complex the question, this is always the answer. 💅",
@@ -305,8 +262,39 @@
     "Science. Logic. Mathematics. All confirmed. 🔬",
     "Even quantum physics can't deny this fact. ⚛️",
   ];
-
   let extraIdx = 0;
+
+  function confirmName() {
+    const input = document.getElementById('nameInput');
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    userName = name;
+
+    // Animate out
+    const screen = document.getElementById('nameScreen');
+    screen.style.transition = 'opacity 0.4s ease';
+    screen.style.opacity = '0';
+    setTimeout(() => screen.remove(), 400);
+
+    // Greet user in chat after short delay
+    setTimeout(() => {
+      addBotGreeting();
+    }, 600);
+  }
+
+  function addBotGreeting() {
+    const chat = document.getElementById('chatWindow');
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
+      <div class="avatar bot-av">🤖</div>
+      <div class="bubble bot">
+        Hey <strong>${escHtml(userName)}</strong>! 👋 I'm AskAnything AI, the world's most intelligent system.<br>
+        <span style="color:var(--muted);font-size:13px">Ask me anything. I know everything. Literally.</span>
+      </div>`;
+    chat.appendChild(row);
+    scrollBottom();
+  }
 
   function sendChip(btn) {
     document.getElementById('userInput').value = btn.textContent;
@@ -333,11 +321,12 @@
 
   function addUserMsg(text) {
     const chat = document.getElementById('chatWindow');
-    chat.innerHTML += `
-      <div class="msg-row user">
-        <div class="avatar user-av">😁</div>
-        <div class="bubble user">${escHtml(text)}</div>
-      </div>`;
+    const row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = `
+      <div class="avatar user-av">😁</div>
+      <div class="bubble user">${escHtml(text)}</div>`;
+    chat.appendChild(row);
     scrollBottom();
   }
 
@@ -361,15 +350,16 @@
 
   function addBotMsg(extra) {
     const chat = document.getElementById('chatWindow');
-    chat.innerHTML += `
-      <div class="msg-row">
-        <div class="avatar bot-av">🤖</div>
-        <div class="bubble bot">
-          My analysis is complete. The answer is:<br>
-          <span class="prank-answer">${prankAnswer}</span>
-          <span style="display:block;margin-top:8px;font-size:13px;color:#888899">${extra}</span>
-        </div>
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
+      <div class="avatar bot-av">🤖</div>
+      <div class="bubble bot">
+        My analysis is complete. The answer is:<br>
+        <span class="prank-answer">I love you ${escHtml(userName)} 💜</span>
+        <span style="display:block;margin-top:8px;font-size:13px;color:#888899">${extra}</span>
       </div>`;
+    chat.appendChild(row);
     scrollBottom();
   }
 
